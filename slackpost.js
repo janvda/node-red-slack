@@ -54,7 +54,7 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
 
         this.channel = n.channel || "";
-        this.apiToken = n.apiToken;
+        this.apiToken = this.credentials.myBotAPItoken; // JVA n.apiToken;
         var node = this;
 
         var Slack = require('slack-client');
@@ -142,7 +142,7 @@ module.exports = function(RED) {
     function slackBotOut(n) {
         RED.nodes.createNode(this,n);
 
-        this.apiToken = n.apiToken;
+        this.apiToken = this.credentials.myBotAPItoken; // n.apiToken;
         this.channel = n.channel || "";
         var node = this;
 
@@ -230,7 +230,11 @@ module.exports = function(RED) {
             slackLogOut(token, node);
         });
     }
-    RED.nodes.registerType("Slack Bot Out", slackBotOut);
+    RED.nodes.registerType("Slack Bot Out", slackBotOut,{
+       credentials: {
+         myBotAPItoken: {type:"password"}
+     }
+    });
 
 
     function slackOut(n) {
