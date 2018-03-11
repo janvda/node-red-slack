@@ -132,7 +132,11 @@ module.exports = function(RED) {
         });
 
     };
-    RED.nodes.registerType("Slack Bot In", slackBotIn);
+    RED.nodes.registerType("Slack Bot In", slackBotIn,{
+       credentials: {
+         myBotAPItoken: {type:"password"}
+     }
+    });
 
 
     function slackBotOut(n) {
