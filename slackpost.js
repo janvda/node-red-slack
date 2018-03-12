@@ -240,7 +240,7 @@ module.exports = function(RED) {
     function slackOut(n) {
         RED.nodes.createNode(this,n);
 
-        this.channelURL = n.channelURL;
+        this.channelURL = this.credentials.webhookURL; // n.channelURL;
         this.username = n.username || "";
         this.emojiIcon = n.emojiIcon || "";
         this.channel = n.channel || "";
@@ -273,5 +273,9 @@ module.exports = function(RED) {
             }
         });
     }
-    RED.nodes.registerType("slack", slackOut);
+    RED.nodes.registerType("slack", slackOut, {
+       credentials: {
+         webhookURL: {type:"text"}
+     }
+    });
 };

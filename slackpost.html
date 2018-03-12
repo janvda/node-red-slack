@@ -17,7 +17,12 @@
 
 <script type="text/x-red" data-template-name="slack">
     <div class="form-row">
-        <label for="node-input-channelURL"><i class="fa fa-slack"></i> WebHook URL</label>
+         <label for="node-input-webhookURL"><i class="icon-tag"></i> WebHook URL</label>
+         <input type="text" id="node-input-webhookURL">
+    </div>
+	
+    <div class="form-row">
+        <label for="node-input-channelURL"><i class="fa fa-slack"></i> WebHook URL deprecated</label>
         <input type="text" id="node-input-channelURL" placeholder="channelURL" style=" vertical-align: top;">
     </div>
 
@@ -114,7 +119,10 @@
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";
-        }
+        },
+		credentials: {
+           webhookURL: {type:"text"}
+		}
     });
     
     RED.nodes.registerType('Slack Bot In',{
