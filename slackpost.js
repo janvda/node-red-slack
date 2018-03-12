@@ -23,7 +23,7 @@ module.exports = function(RED) {
     var slackBotState = {};
 
     // set this to true to spam your console with stuff.
-    var slackDebug = true;
+    var slackDebug = false;
 
     function slackLogin(token, node){
         if(slackBotGlobal[token] && slackBotGlobal[token].connected === false && slackBotState[token] && slackBotState[token].connecting === false) {
@@ -54,7 +54,7 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
 
         this.channel = n.channel || "";
-        this.apiToken = this.credentials.myBotAPItoken; // JVA n.apiToken;
+        this.apiToken = this.credentials.myBotAPItoken;
         var node = this;
 
         var Slack = require('slack-client');
@@ -142,7 +142,7 @@ module.exports = function(RED) {
     function slackBotOut(n) {
         RED.nodes.createNode(this,n);
 
-        this.apiToken = this.credentials.myBotAPItoken; // n.apiToken;
+        this.apiToken = this.credentials.myBotAPItoken;
         this.channel = n.channel || "";
         var node = this;
 
@@ -240,7 +240,7 @@ module.exports = function(RED) {
     function slackOut(n) {
         RED.nodes.createNode(this,n);
 
-        this.channelURL = this.credentials.webhookURL; // n.channelURL;
+        this.channelURL = this.credentials.webhookURL;
         this.username = n.username || "";
         this.emojiIcon = n.emojiIcon || "";
         this.channel = n.channel || "";
