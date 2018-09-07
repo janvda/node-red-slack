@@ -29,15 +29,16 @@ module.exports = function(RED) {
         if(slackBotGlobal[token] && slackBotGlobal[token].connected === false && slackBotState[token] && slackBotState[token].connecting === false) {
             if (slackDebug) { node.log("Slack not connected"); }
             slackBotState[token].connecting = true;
+						node.log("Slack logging in ...");
             slackBotGlobal[token].login();
         } else {
-           if (slackDebug) { node.log("Slack already connected"); }
+           node.log("Slack already connected");
         }
     }
 
     function slackLogOut(token, node){
         if(slackBotGlobal[token]) {
-            if (slackDebug) { node.log("Slack disconnecting."); }
+            node.log("Slack disconnecting...");
             slackBotState[token].connecting = false;
             var dis = slackBotGlobal[token].disconnect();
             slackBotGlobal[token].removeAllListeners();
@@ -128,6 +129,7 @@ module.exports = function(RED) {
         }, 10000);
 
         this.on('close', function() {
+					  node.log('on close ... ');
             slackLogOut(token, node);
         });
 
