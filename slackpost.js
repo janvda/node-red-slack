@@ -140,6 +140,33 @@ module.exports = function(RED) {
      }
     });
 
+    function slackKeepAlive(n) {
+        RED.nodes.createNode(this,n);
+        this.apiToken = n.apiToken;
+        var node = this;
+        var token = this.apiToken;
+        this.on('input', function (msg) {
+            var slack;
+            msg = {}
+            if(slackBotGlobal && slackBotGlobal[token]) {
+                slack = slackBotGlobal[token];
+                var wasConnected = slack.connected;
+                if ( ! slack.connected ) {
+                    node.log('KEEP ALIVE : Reconencting to Slack.');
+                    slackReconnect(token, node);
+                    msg.payload=false;
+                } else {
+                    msg.payload=true;
+                }
+            } else {
+                node.log("Keep alive called before other bot nodes initialised");
+                msg.payload="ERROR : Slackbot wasn't initialised, don't call this node until after initialising one of the other Slack Bot nodes";
+            }
+            node.send(msg);
+        });
+    }
+	
+    RED.nodes.registerType("Slack Bot Keep Alive", slackKeepAlive);
 
     function slackBotOut(n) {
         RED.nodes.createNode(this,n);
