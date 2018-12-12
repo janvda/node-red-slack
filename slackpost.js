@@ -166,7 +166,11 @@ module.exports = function(RED) {
         });
     }
 	
-    RED.nodes.registerType("Slack Bot Keep Alive", slackKeepAlive);
+    RED.nodes.registerType("Slack Bot Keep Alive", slackKeepAlive{
+       credentials: {
+         myBotAPItoken: {type:"password"}
+     }
+    });
 
     function slackBotOut(n) {
         RED.nodes.createNode(this,n);
