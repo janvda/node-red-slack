@@ -142,7 +142,7 @@ module.exports = function(RED) {
 
     function slackKeepAlive(n) {
         RED.nodes.createNode(this,n);
-        this.apiToken = n.apiToken;
+	this.apiToken = this.credentials.myBotAPItoken;
         var node = this;
         var token = this.apiToken;
         this.on('input', function (msg) {
