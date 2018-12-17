@@ -93,21 +93,6 @@
     <p>You can optionally override the destination channel if required - either in the edit dialogue or by setting <b>msg.channel</b>.</p>
 </script>
 
-<script type="text/x-red" data-template-name="Slack Bot Keep Alive">
-    <div class="form-row">
-         <label for="node-input-myBotAPItoken"><i class="fa fa-slack"></i>My Bot API Token</label>
-         <input type="password" id="node-input-myBotAPItoken">
-    </div>
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-</script>
- <script type="text/x-red" data-help-name="Slack Bot Keep Alive">
-    <p>Checks if the bot is still connected.  If not, it reconnects.  Returns a boolean reflecting if it was still connected</p>
-</script>
-
-
 <script type="text/javascript">
     RED.nodes.registerType('slack',{
         category: 'social',
@@ -130,27 +115,6 @@
         },
 		credentials: {
            webhookURL: {type:"text"}
-		}
-    });
-	
-   RED.nodes.registerType('Slack Bot Keep Alive',{
-        category: 'social',
-        defaults: {
-            name: {value:""}
-        },
-         color:"#4C9689",
-        icon: "hash.png",
-        align: "right",
-        inputs:1,
-        outputs:1,
-        label: function() {
-            return this.name||"slack keep alive";
-        },
-        labelStyle: function() {
-            return this.name?"node_label_italic":"";
-        },
-		credentials: {
-           myBotAPItoken: {type:"password"}
 		}
     });
     
