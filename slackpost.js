@@ -21,6 +21,7 @@ module.exports = function(RED) {
     var request = require('request');
     var slackBotGlobal = {};
     var slackBotState = {};
+		var slackBotMonitor = {};
 
     // set this to true to spam your console with stuff.
     var slackDebug = false;
@@ -31,6 +32,11 @@ module.exports = function(RED) {
             slackBotState[token].connecting = true;
 						node.log("Slack logging in ...");
             slackBotGlobal[token].login();
+						if ( ! slackBotMonitor[token] ) {
+                slackBotMonitor[token] = setInterval(function() {
+                    slackKeepAlive(token, node);
+                }, 30*1000);
+            }
         } else {
            node.log("Slack already connected");
         }
@@ -43,6 +49,7 @@ module.exports = function(RED) {
             var dis = slackBotGlobal[token].disconnect();
             slackBotGlobal[token].removeAllListeners();
             delete slackBotGlobal[token];
+						clearInterval(slackBotMonitor[token]);
         }
     }
 
@@ -140,37 +147,22 @@ module.exports = function(RED) {
      }
     });
 
-    function slackKeepAlive(n) {
-        RED.nodes.createNode(this,n);
-	this.apiToken = this.credentials.myBotAPItoken;
-        var node = this;
-        var token = this.apiToken;
-        this.on('input', function (msg) {
-            var slack;
-            msg = {}
-            if(slackBotGlobal && slackBotGlobal[token]) {
-                slack = slackBotGlobal[token];
-                var wasConnected = slack.connected;
-                if ( ! slack.connected ) {
-                    node.log('KEEP ALIVE : Reconencting to Slack.');
-                    slackReconnect(token, node);
-                    msg.payload=false;
-                } else {
-                    msg.payload=true;
-                }
+    function slackKeepAlive(token, node) {
+        var slack;
+        if(slackBotGlobal && slackBotGlobal[token]) {
+            slack = slackBotGlobal[token];
+            var wasConnected = slack.connected;
+            if ( ! slack.connected ) {
+                node.log('KEEP ALIVE : Reconencting to Slack. (' + wasConnected + ',' + slackBotState[token].connecting + ')');
+                slackBotState[token].connecting = false; // This was set to true for some reason, and causing 'Slack already connected' to be logged in slackLogin.
+                slackLogin(token, node);
             } else {
-                node.log("Keep alive called before other bot nodes initialised");
-                msg.payload="ERROR : Slackbot wasn't initialised, don't call this node until after initialising one of the other Slack Bot nodes";
+//                if (slackDebug) { node.log('KEEP ALIVE : Still connected (' + wasConnected + ',' + slackBotState[token].connecting + ')'); }
             }
-            node.send(msg);
-        });
+        } else {
+            node.log("Keep alive called before other bot nodes initialised");
+        }
     }
-	
-    RED.nodes.registerType("Slack Bot Keep Alive", slackKeepAlive ,{
-       credentials: {
-         myBotAPItoken: {type:"password"}
-     }
-    });
 
     function slackBotOut(n) {
         RED.nodes.createNode(this,n);
