@@ -68,7 +68,7 @@ module.exports = function(RED) {
         var Slack = require('slack-client');
 
         var token = this.apiToken;
-        var autoReconnect = true;
+        var autoReconnect = false;
         var autoMark = true;
 
         var slack = {};
